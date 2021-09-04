@@ -41,7 +41,6 @@ def gettable_xl(time,day,loca,stnname,upd) :
     #시간 처리
     timelist = time.split(":")
     timed = datetime.time(int(timelist[0]),int(timelist[1]),int(timelist[2]))
-    print([0,timed])
     timez = datetime.timedelta(hours=int(timelist[0]),minutes =int(timelist[1]),seconds=int(timelist[2]))
 
     #결선 처리
@@ -59,24 +58,19 @@ def gettable_xl(time,day,loca,stnname,upd) :
     output =[]
     output2 = []
     for k in range(len(diagr[diagr['시발역']==stnname].transpose())):
-      output.append([number[k], diagr.iloc[0,k], diagr.iloc[stndialoc,k],diagr.iloc[stndialoc,k]])
+      output.append([number[k], diagr.iloc[0,k], diagr.iloc[stndialoc,k],diagr.iloc[stndialoc+1,k]])
     for t in output :
-      if t[0] == "열차번호" or t[3] =='        'or t[2] =='        ' :
-        output.remove(t)
-      else :  
-          if (t[2].hour-timed.hour)>0 :
-              if (t[2].minute -timed.minute)>0 :
-                  if (t[2].second -timed.second)>0 :
-                      output2.append(t)
-                  else : output.remove(t)
-              else : output.remove(t)
-          else : output.remove(t)
-          if t[3] == "당역 출발" :
-            if int(t[4].split(":")[0]) < timed[0] or int(t[4].split(":")[0]) <timed[1] or int(t[4].split(":")[0])<timed[2] :
-                output.remove(t)
-          elif t[3] == "당역 미정차" :
-            output.remove(t)
+        
+        if t[0] == "열차번호" or t[3] =='        'or t[2] =='        ' :
+            pass
+        else :  
+
+            if (type(t[2]) is not datetime.time) or (type(t[3]) is not datetime.time) :
+                if (t[2] != "당역 미정차") or (t[2] != "당역 출발") or (t[3] != "당역 미정차") or (t[3] != "당역 종착") :
+                    output2.append(t)
+                else : pass
+            elif (t[2].hour*3600+t[2].minute*60+t[2].second-timed.hour*3600-timed.minute*60-timed.second)>0 :
+                output2.append(t)
+            else : pass
+            
     return output2
-
-print(gettable_xl("11:00:00",1,1,"역곡","U"))
-
