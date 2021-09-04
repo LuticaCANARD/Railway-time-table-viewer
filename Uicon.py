@@ -41,8 +41,8 @@ class windowCl (QMainWindow, form) :
         self.sta_timetable2.setColumnCount(4)
         self.sta_timetable2.setHorizontalHeaderLabels(['열번', '행선지', '도착시간','출발시간'])
         for i,u in zip(table,range(len(table))) :
-            self.sta_timetable2.setItem(u,0,QTableWidgetItem(i[0]))
-            self.sta_timetable2.setItem(u,1,QTableWidgetItem(i[1]))
+            self.sta_timetable2.setItem(u,0,QTableWidgetItem(str(i[0])))
+            self.sta_timetable2.setItem(u,1,QTableWidgetItem(str(i[1])))
             self.sta_timetable2.setItem(u,2,QTableWidgetItem(str(i[2])))
             self.sta_timetable2.setItem(u,3,QTableWidgetItem(str(i[3])))
 

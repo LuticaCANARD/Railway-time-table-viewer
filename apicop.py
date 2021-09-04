@@ -47,12 +47,12 @@ def gettable_xl(time,day,loca,stnname,upd) :
     for i in range(len(diagr.loc[diagr['시발역']==stnname].transpose())) :
       arrtime = diagr.iloc[stndialoc,i]
       steptime = diagr.iloc[stndialoc_start,i]
-      if (arrtime=='        ') and (steptime =='        ') :
+      if (arrtime=='nan') and (steptime =='nan') :
         diagr.iloc[[stndialoc],[i]] = "당역 미정차"
         diagr.iloc[[stndialoc+1],[i]] = "당역 미정차"
-      elif arrtime!= '        ' and steptime == '        ' :
+      elif arrtime!= 'nan' and steptime == 'nan' :
         diagr.iloc[[stndialoc],[i]] = "당역 출발"
-      elif arrtime== '        ' and steptime != '        ' :
+      elif arrtime== 'nan' and steptime != 'nan' :
         diagr.iloc[[stndialoc_start],[i]] = "당역 종착"
     #목표 리스트 가공
     output =[]
@@ -61,16 +61,23 @@ def gettable_xl(time,day,loca,stnname,upd) :
       output.append([number[k], diagr.iloc[0,k], diagr.iloc[stndialoc,k],diagr.iloc[stndialoc+1,k]])
     for t in output :
         
-        if t[0] == "열차번호" or t[3] =='        'or t[2] =='        ' :
+        if t[0] == "열차번호" :
             pass
         else :  
-
-            if (type(t[2]) is not datetime.time) or (type(t[3]) is not datetime.time) :
-                if (t[2] != "당역 미정차") or (t[2] != "당역 출발") or (t[3] != "당역 미정차") or (t[3] != "당역 종착") :
+            print(t)
+            if (type(t[2]) is not datetime.time) :
+                if (t[2] != "당역 미정차") or (t[2] != "당역 출발") :
                     output2.append(t)
                 else : pass
             elif (t[2].hour*3600+t[2].minute*60+t[2].second-timed.hour*3600-timed.minute*60-timed.second)>0 :
                 output2.append(t)
+            elif (type(t[3]) is not datetime.time) :
+                if (t[3] != "당역 미정차") or (t[3] != "당역 종착") :
+                    output2.append(t)
+                else : pass
+            elif (t[3].hour*3600+t[3].minute*60+t[3].second-timed.hour*3600-timed.minute*60-timed.second)>0 :
+                output2.append(t)
             else : pass
             
     return output2
+print(gettable_xl("11:00:00",1,1,'동인천','u'))
