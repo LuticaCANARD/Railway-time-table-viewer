@@ -30,9 +30,10 @@ class windowCl (QMainWindow, form) :
         day_di = {0: nomaldays,
                   1: satd,
                   2: vac}
+
         daycode = day_di.get(days_int)
         #��� : [ [����, �༱��, �����ð�,��߽ð�] , [] ]
-        table = apicop.gettable(timing_eta_str,daycode,stacode)
+        table = apicop.gettable(timing_eta_str,daycode,stacode,'u')
         print(table)
         self.sta_timetable2.setRowCount(len(table))
         self.sta_timetable2.setColumnCount(4)
